@@ -5,31 +5,20 @@ const { TMDBClient } = require("./tmdbClient");
 let defaultClient = null;
 
 /**
- * Get a TMDB client instance based on config
- * @param {Object} config - Configuration object that may contain tmdbApiKey
+ * Get a TMDB client instance
  * @returns {TMDBClient} - A TMDB client instance
- * @throws {Error} - If no API key is available
+ * @throws {Error} - If TMDB_API env variable is not set
  */
-function getTmdbClient(config = {}) {
-    const userApiKey = config.tmdbApiKey;
+function getTmdbClient() {
     const envApiKey = process.env.TMDB_API;
-    const apiKey = userApiKey || envApiKey;
 
-    if (!apiKey) {
+    if (!envApiKey) {
         const error = new Error("TMDB_API_KEY_MISSING");
-        error.userMessage = "A TMDB API Key is required to use this addon. " +
-            "Please enter your key in the addon configuration page or contact the server administrator.";
-        error.statusCode = 401;
+        error.userMessage = "TMDB API key must be configured on the server.";
+        error.statusCode = 500;
         throw error;
     }
 
-    // If using user-provided key, create a new client each time
-    // (different users may have different keys)
-    if (userApiKey) {
-        return new TMDBClient(userApiKey);
-    }
-
-    // Otherwise use/create the default cached client
     if (!defaultClient) {
         defaultClient = new TMDBClient(envApiKey);
     }
