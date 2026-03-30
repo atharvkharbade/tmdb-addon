@@ -190,24 +190,33 @@ function parseCreatedBy(created_by) {
 function parseConfig(catalogChoices) {
   let config = {};
 
-  // If catalogChoices is null, undefined or empty, return empty object
-  if (!catalogChoices) {
-    return config;
-  }
-
-  try {
-    // Try to decompress with lz-string
-    const decoded = decompressFromEncodedURIComponent(catalogChoices);
-    config = JSON.parse(decoded);
-  } catch (e) {
+  if (catalogChoices) {
     try {
-      config = JSON.parse(catalogChoices);
-    } catch {
-      if (catalogChoices) {
-        config.language = catalogChoices;
+      // Try to decompress with lz-string
+      const decoded = decompressFromEncodedURIComponent(catalogChoices);
+      config = JSON.parse(decoded);
+    } catch (e) {
+      try {
+        config = JSON.parse(catalogChoices);
+      } catch {
+        if (catalogChoices) {
+          config.language = catalogChoices;
+        }
       }
     }
   }
+
+  // Apply environment variable defaults
+  if (process.env.RPDB_API_KEY && !config.rpdbkey) {
+    config.rpdbkey = process.env.RPDB_API_KEY;
+  }
+  if (process.env.FANART_API && !config.fanartkey) {
+    config.fanartkey = process.env.FANART_API;
+  }
+  if (process.env.TMDB_API && !config.tmdbkey) {
+    config.tmdbkey = process.env.TMDB_API;
+  }
+
   return config;
 }
 
