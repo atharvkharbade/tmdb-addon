@@ -255,16 +255,26 @@ function getRpdbPoster(type, id, language, rpdbkey, rpdbMediaTypes = null) {
   return getRpdbMedia(type, id, language, rpdbkey, "poster");
 }
 
-function parseMedia(el, type, genreList = []) {
+function parseMedia(el, type, genreList = [], rpdbkey, rpdbMediaTypes, topposterskey, toppostersConfig, language = 'en-US') {
   const genres = Array.isArray(el.genre_ids)
     ? el.genre_ids.map(genre => genreList.find((x) => x.id === genre)?.name || 'Unknown')
     : [];
+
+  let poster = `https://image.tmdb.org/t/p/w500${el.poster_path}`;
+  if (topposterskey) {
+    poster = getTopPostersUrl(type, el.id, topposterskey, toppostersConfig || {}, language);
+  } else if (rpdbkey) {
+    const isMediaTypeEnabled = !rpdbMediaTypes || rpdbMediaTypes.poster !== false;
+    if (isMediaTypeEnabled) {
+      poster = getRpdbMedia(type, el.id, language, rpdbkey, 'poster');
+    }
+  }
 
   return {
     id: `tmdb:${el.id}`,
     name: type === 'movie' ? el.title : el.name,
     genre: genres,
-    poster: `https://image.tmdb.org/t/p/w500${el.poster_path}`,
+    poster,
     background: `https://image.tmdb.org/t/p/original${el.backdrop_path}`,
     posterShape: "regular",
     imdbRating: el.vote_average ? el.vote_average.toFixed(1) : 'N/A',
