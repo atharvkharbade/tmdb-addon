@@ -28,7 +28,7 @@ This guide provides instructions for self-hosting the TMDB Addon for Stremio.
 
 If you're upgrading from v3.1.5 or earlier, you can safely remove the `MONGODB_URI` environment variable. The addon will work with in-memory caching by default. For production deployments, consider using Redis for better performance and scalability.
 
-For more details, see [issue #1215](https://github.com/mrcanelas/tmdb-addon/issues/1215).
+For more details, see [issue #1215](https://github.com/atharvkharbade/tmdb-addon/issues/1215).
 
 ## Vercel Deployment (Easiest)
 
@@ -40,7 +40,7 @@ Vercel is the easiest way to deploy this addon. It provides:
 
 ### One-Click Deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/mrcanelas/tmdb-addon&env=TMDB_API&env=FANART_API&env=HOST_NAME)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/atharvkharbade/tmdb-addon&env=TMDB_API&env=FANART_API&env=HOST_NAME)
 
 1. Click the button above to deploy to Vercel
 2. Sign in to Vercel (or create a free account)
@@ -161,7 +161,7 @@ docker run -d \
   -e HOST_NAME=http://your_domain:1337 \
   -e TRAKT_CLIENT_ID=your_trakt_client_id \
   -e TRAKT_CLIENT_SECRET=your_trakt_client_secret \
-  mrcanelas/tmdb-addon:latest
+  atharvkharbade/tmdb-addon:latest
 ```
 
 ### Using Docker Compose
@@ -172,7 +172,7 @@ Create a `docker-compose.yml` file:
 version: '3'
 services:
   tmdb-addon:
-    image: mrcanelas/tmdb-addon:latest
+    image: atharvkharbade/tmdb-addon:latest
     container_name: tmdb-addon
     ports:
       - "1337:1337"
@@ -194,7 +194,7 @@ docker-compose up -d
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/mrcanelas/tmdb-addon.git
+git clone https://github.com/atharvkharbade/tmdb-addon.git
 cd tmdb-addon
 ```
 
@@ -256,7 +256,7 @@ METRICS_PASSWORD=your_password_here
 
 # GitHub Integration (Optional - for season checking)
 GITHUB_TOKEN=your_github_token_here
-GITHUB_REPO=mrcanelas/tmdb-addon
+GITHUB_REPO=atharvkharbade/tmdb-addon
 ```
 
 4. Build the project:
@@ -453,4 +453,4 @@ To add the addon to Stremio, use the URL:
    - Adjust cache TTL values (META_TTL, CATALOG_TTL) if needed
    - Check if NO_CACHE is set to false
 
-For additional help, please open an issue on [GitHub](https://github.com/mrcanelas/tmdb-addon/issues).
+For additional help, please open an issue on [GitHub](https://github.com/atharvkharbade/tmdb-addon/issues).

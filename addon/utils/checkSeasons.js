@@ -4,7 +4,7 @@ const diferentOrder = require("../static/diferentOrder.json");
 
 const CHECK_INTERVAL_DAYS = 7; // You can adjust as needed
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const GITHUB_REPO = process.env.GITHUB_REPO; // Ex: 'mrcanelas/tmdb-addon'
+const GITHUB_REPO = process.env.GITHUB_REPO; // Ex: 'atharvkharbade/tmdb-addon'
 
 const client = axios.create({ timeout: 10000 });
 

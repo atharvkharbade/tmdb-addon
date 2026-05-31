@@ -25,7 +25,7 @@ tmdb-addon/
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/mrcanelas/tmdb-addon.git
+git clone https://github.com/atharvkharbade/tmdb-addon.git
 cd tmdb-addon
 ```
 

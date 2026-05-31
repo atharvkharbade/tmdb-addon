@@ -4,7 +4,7 @@
 
 > A powerful Stremio addon that enhances your streaming experience with TMDB metadata
 
-[![Version](https://img.shields.io/badge/version-3.1.7-blue.svg)](https://github.com/mrcanelas/tmdb-addon)
+[![Version](https://img.shields.io/badge/version-3.1.7-blue.svg)](https://github.com/atharvkharbade/tmdb-addon)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
 
 ## 🌟 Features
@@ -115,7 +115,7 @@ For detailed instructions on hosting your own instance, check our [Self-Hosting 
 
 ### Deploy to Vercel (One-Click)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/mrcanelas/tmdb-addon&env=TMDB_API&env=FANART_API&env=HOST_NAME)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/atharvkharbade/tmdb-addon&env=TMDB_API&env=FANART_API&env=HOST_NAME)
 
 The easiest way to deploy this addon is using Vercel's one-click deploy. After clicking the button above:
 
@@ -149,7 +149,7 @@ docker run -d \
   -e HOST_NAME=http://your_domain:1337 \
   -e TRAKT_CLIENT_ID=your_trakt_client_id \
   -e TRAKT_CLIENT_SECRET=your_trakt_client_secret \
-  mrcanelas/tmdb-addon:latest
+  atharvkharbade/tmdb-addon:latest
 ```
 
 ### Docker with Proxy Support
@@ -162,7 +162,7 @@ docker run -d \
   -e TMDB_PROXY_HOST=127.0.0.1 \
   -e TMDB_PROXY_PORT=40000 \
   -e TMDB_PROXY_PROTOCOL=socks5 \
-  mrcanelas/tmdb-addon:latest
+  atharvkharbade/tmdb-addon:latest
 ```
 
 For complete proxy setup with Cloudflare WARP, see [docker-compose.proxy.yml](docker-compose.proxy.yml).
@@ -211,7 +211,7 @@ We welcome contributions! Please read our [Contributing Guide](docs/contributing
 ### Development Setup
 ```bash
 # Clone the repository
-git clone https://github.com/mrcanelas/tmdb-addon.git
+git clone https://github.com/atharvkharbade/tmdb-addon.git
 cd tmdb-addon
 
 # Install dependencies
@@ -269,7 +269,7 @@ This project is licensed under the Apache-2.0 License - see the [LICENSE](LICENS
 - [Fanart.tv](https://fanart.tv/) for additional artwork
 - [Stremio](https://www.stremio.com/) for the amazing streaming platform
 - [rleroi](https://github.com/rleroi) for the Streaming Catalogs addon
-- All our [contributors](https://github.com/mrcanelas/tmdb-addon/graphs/contributors)
+- All our [contributors](https://github.com/atharvkharbade/tmdb-addon/graphs/contributors)
 
 ## ⚠️ Disclaimer
 
@@ -277,8 +277,8 @@ The metadata is provided by [TMDB](https://themoviedb.org/) and is subject to ch
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/mrcanelas/tmdb-addon/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/mrcanelas/tmdb-addon/discussions)
+- **Issues**: [GitHub Issues](https://github.com/atharvkharbade/tmdb-addon/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/atharvkharbade/tmdb-addon/discussions)
 
 ---
 
