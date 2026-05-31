@@ -153,11 +153,32 @@ const fetchCollectionData = async (moviedb, collTMDBId, language, tmdbId) => {
 // Movie specific functions
 const fetchMovieData = async (moviedb, tmdbId, language) => {
     try {
-        return await moviedb.movieInfo({
+        const res = await moviedb.movieInfo({
             id: tmdbId,
             language,
             append_to_response: "videos,credits,external_ids,release_dates"
         });
+
+        // Language fallback: if TMDB returned no overview or title in the requested
+        // language, retry in English so the user sees something instead of a blank.
+        if (language !== 'en-US' && res && (!res.overview || !res.title)) {
+            try {
+                const fallback = await moviedb.movieInfo({
+                    id: tmdbId,
+                    language: 'en-US',
+                    append_to_response: "videos,credits,external_ids,release_dates"
+                });
+                if (fallback) {
+                    if (!res.overview && fallback.overview) res.overview = fallback.overview;
+                    if (!res.title && fallback.title) res.title = fallback.title;
+                }
+            } catch (fallbackErr) {
+                // Non-critical — ignore, continue with whatever we already have
+                console.warn(`[getMeta] English fallback failed for movie ${tmdbId}:`, fallbackErr.message);
+            }
+        }
+
+        return res;
     } catch (e) {
         // Swallow 404s (not found) and return null; rethrow other errors
         if (e?.response?.status === 404) return null;
@@ -260,11 +281,32 @@ const buildMovieResponse = async (res, type, language, tmdbId, config = {}) => {
 // TV show specific functions
 const fetchTvData = async (moviedb, tmdbId, language) => {
     try {
-        return await moviedb.tvInfo({
+        const res = await moviedb.tvInfo({
             id: tmdbId,
             language,
             append_to_response: "videos,credits,external_ids,content_ratings"
         });
+
+        // Language fallback: if TMDB returned no overview or name in the requested
+        // language, retry in English so the user sees something instead of a blank.
+        if (language !== 'en-US' && res && (!res.overview || !res.name)) {
+            try {
+                const fallback = await moviedb.tvInfo({
+                    id: tmdbId,
+                    language: 'en-US',
+                    append_to_response: "videos,credits,external_ids,content_ratings"
+                });
+                if (fallback) {
+                    if (!res.overview && fallback.overview) res.overview = fallback.overview;
+                    if (!res.name && fallback.name) res.name = fallback.name;
+                }
+            } catch (fallbackErr) {
+                // Non-critical — ignore, continue with whatever we already have
+                console.warn(`[getMeta] English fallback failed for series ${tmdbId}:`, fallbackErr.message);
+            }
+        }
+
+        return res;
     } catch (e) {
         if (e?.response?.status === 404) return null;
         throw e;

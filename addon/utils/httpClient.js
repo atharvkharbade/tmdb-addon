@@ -38,52 +38,65 @@ function shouldUseProxy(url) {
   }
 }
 
-/**
- * Create an axios instance with proxy configuration if needed
- * @param {string} url - Request URL
- * @returns {Object} - Configured axios instance
- */
-function createAxiosInstance(url) {
+// Shared axios instance for direct (non-proxy) TMDB calls.
+// Reusing one instance means axios keeps the underlying TCP+TLS connection
+// alive via keep-alive, avoiding a full handshake on every request.
+const sharedDirectInstance = axios.create({
+  timeout: 15000,
+  headers: {
+    'User-Agent': 'TMDB-Addon/3.1.7'
+  }
+});
+
+// Lazily-created shared proxy instance (only built when proxy is actually used).
+let sharedProxyInstance = null;
+
+function buildProxyInstance() {
   const config = {
-    timeout: 30000,
+    timeout: 15000,
     headers: {
       'User-Agent': 'TMDB-Addon/3.1.7'
     }
   };
 
-  if (shouldUseProxy(url)) {
-    console.log(`Using proxy for: ${url}`);
-    
-    const proxyConfig = {
-      host: PROXY_CONFIG.host,
-      port: PROXY_CONFIG.port,
-      protocol: PROXY_CONFIG.protocol
-    };
+  const proxyConfig = {
+    host: PROXY_CONFIG.host,
+    port: PROXY_CONFIG.port,
+    protocol: PROXY_CONFIG.protocol
+  };
 
-    if (PROXY_CONFIG.auth) {
-      proxyConfig.auth = PROXY_CONFIG.auth;
-    }
+  if (PROXY_CONFIG.auth) {
+    proxyConfig.auth = PROXY_CONFIG.auth;
+  }
 
-    config.proxy = proxyConfig;
-    
-    // Additional configuration for HTTPS through proxy
-    if (PROXY_CONFIG.protocol === 'https') {
-      config.httpsAgent = new https.Agent({
-        rejectUnauthorized: false
-      });
-    } else {
-      config.httpAgent = new http.Agent();
-    }
+  config.proxy = proxyConfig;
+
+  if (PROXY_CONFIG.protocol === 'https') {
+    config.httpsAgent = new https.Agent({ rejectUnauthorized: false });
+  } else {
+    config.httpAgent = new http.Agent();
   }
 
   return axios.create(config);
 }
 
 /**
+ * Return a shared axios instance, with proxy if the URL needs it.
+ * @param {string} url - Request URL
+ * @returns {Object} - Configured axios instance
+ */
+function createAxiosInstance(url) {
+  if (shouldUseProxy(url)) {
+    if (!sharedProxyInstance) {
+      sharedProxyInstance = buildProxyInstance();
+    }
+    return sharedProxyInstance;
+  }
+  return sharedDirectInstance;
+}
+
+/**
  * Make a GET request with proxy support
- * @param {string} url - URL to make request to
- * @param {Object} options - Additional options
- * @returns {Promise} - Promise with response
  */
 async function get(url, options = {}) {
   const instance = createAxiosInstance(url);
@@ -92,10 +105,6 @@ async function get(url, options = {}) {
 
 /**
  * Make a POST request with proxy support
- * @param {string} url - URL to make request to
- * @param {Object} data - Data to send
- * @param {Object} options - Additional options
- * @returns {Promise} - Promise with response
  */
 async function post(url, data = {}, options = {}) {
   const instance = createAxiosInstance(url);
@@ -131,4 +140,4 @@ module.exports = {
   createAxiosInstance,
   testProxy,
   PROXY_CONFIG
-}; 
+};

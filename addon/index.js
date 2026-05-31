@@ -302,7 +302,15 @@ addon.get("/:catalogChoices?/catalog/:type/:id/:extra?.json", async function (re
       });
       return;
     }
-    res.status(404).send((e || {}).message || "Not found");
+    // For search requests, return an empty result set instead of a hard 404/500.
+    // This means Stremio shows "no results" rather than an error banner — the user
+    // can simply search again and the retry logic in TMDBClient will handle it.
+    if (search) {
+      console.error(`[catalog] Search error for "${search}" (${type}/${id}):`, e.message);
+      respond(res, { metas: [] }, {});
+      return;
+    }
+    res.status(500).json({ error: e.message || "Internal server error" });
     return;
   }
   const cacheOpts = {
